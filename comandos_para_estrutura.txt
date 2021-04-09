@@ -1,0 +1,49 @@
+# criar um schema
+CREATE SCHEMA nome_do_schema DEFAULT CHARSET utf8mb4 collate utf8mb4_unicode_ci;
+
+# apagar um schema
+DROP SCHEMA nome_do_schema;
+
+# criar tabela de usuários
+CREATE TABLE usuarios (
+	id INT unsigned not null auto_increment primary key,
+    nome varchar(255) not null,
+    email varchar(255) not null unique,
+    senha varchar(255) not null,
+    telefone varchar(20) null
+)
+
+
+create table enderecos(
+	id int unsigned auto_increment not null primary key, 
+	estado enum ('AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 'RJ', 'RN',
+    'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO') not null,
+    cidade varchar(255) not null,
+	logradouro varchar(255) not null,
+    numero varchar(25) not null,
+    cep varchar(9) not null,
+    complemento varchar (255) null
+);
+
+alter table enderecos add column bairro varchar(255);
+
+
+alter table enderecos add column bairro varchar(255);
+
+alter table enderecos add column id_usuario int unsigned;
+#           tabela_de_origem          nome_da_chave_estrangeira           coluna_de_origem        tabela_de_destino(coluna_de_destino)
+alter table enderecos add constraint `fk_id_usuario_usuarios` foreign key (id_usuario) REFERENCES usuarios(id);
+#fk_ campo_de_origem _ tabela_de_destino
+#fk_ id_usuario _ usuarios
+
+alter table enderecos drop constraint fk_id_usuario_usuario;
+
+alter table enderecos drop column id_usuario; # apaga a coluna id_usuario
+
+# criar tabela estados, criar uma chave estrangeira em endereços apontando pra tabela estados
+
+#estados
+#  sigla => chave primaria
+#  nome
+
+#sigla_estado -> estados -> sigla
