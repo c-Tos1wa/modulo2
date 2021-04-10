@@ -1,0 +1,128 @@
+#insert => criar registros no banco
+#exemplo: insert into nome_da_tabela (coluna_1, coluna_2, coluna_3...) values (valor_coluna_1, valor_coluna_2, valor_coluna_3..);
+insert into produtos 
+(nome, descricao, preco, id_categoria_produtoprodutos)
+values
+("Semartphone do Haruan2", "Descricao do Smartphone do Haruan2", 12.10, 8),
+("Semartphone do Haruan3", "Descricao do Smartphone do Haruan3", 12.10, 8);
+
+# tarefa: inserir estados na tabela de estados (uns 3 já tá bom)
+insert into estados(sigla,nome) 
+values 
+('AC','ACRE'), ('AL', 'ALAGOAS');
+
+
+insert into estados(sigla,nome) 
+values 
+('AC','ACRE');
+
+
+# ignore ignora os erros de duplicado e cadastra os outros
+insert ignore into estados(sigla, nome) values ('AC', 'Acre'), ('AL', 'Alagoas'), ('AP', 'Amapá'), ('AM', 'Amazonas'), ('BA', 'Bahia'), ('CE', 'Ceará'),
+('DF', 'Distrito Federal'), ('ES', 'Espírito Santo'), ('GO', 'Goiás'), ('MA', 'Maranhão'), ('MT', 'Mato Grosso'), ('MS', 'Mato Grosso do Sul'),
+('MG', 'Minas Gerais'), ('PA', 'Pará'), ('PB', 'Paraíba'), ('PR', 'Paraná'), ('PE', 'Pernambuco'), ('PI', 'Piauí'), ('RJ', 'Rio de Janeiro'),
+('RN', 'Rio Grande do Norte'), ('RS', 'Rio Grande do Sul'), ('RO', 'Rondônia'), ('RR', 'Roraima'), ('SC', 'Santa Catarina'), ('SP', 'São Paulo'),
+('SE', 'Sergipe'), ('TO', 'Tocantins');
+
+# quando você não sabe se o item existe mas quer que ele fique como está mandando
+insert into estados(sigla, nome) values ('AC', 'Acre') on duplicate key update nome='Acre';
+
+#insert select
+
+#update => alterar registros
+update produtos set nome="nome alterado do produto" where id_produto=5; # funciona
+update produtos set nome="nome alterado do produto" where nome="Smartphone do Haruan2"; # não funciona ainda
+
+#Pergunta: O que acontece quando eu executo um update sem where? R: ALTERA TUDO!
+update produtos set nome="nome alterado do produto";
+
+#Pergunta: O que acontece quando tento alterar um produto que não existe? R:  Não altera nenhum produto
+update produtos set nome="nome alterado do produto" where id_produto=9999;
+
+#delete => apagar registros
+delete from produtos where id_produto=5;
+
+#Pergunta: O que acontece quando eu executo um delete sem where? R: APAGA TUDO!
+delete from produtos;
+
+#Pergunta: O que acontece quando tento apagar um produto que não existe? R: 
+delete from produtos where id_produto=999999;
+
+#select => ler registros
+#select coluna_1, coluna_2 FROM tabela WHERE condições;
+SELECT nome from estados where sigla = 'AC';
+
+#SELECT FROM estados where sigla = 'AC';
+
+SELECT * from estados;
+# 11 milhões de registros? => trava o programa e fecha sozinho.
+
+# NUNCA ESQUEÇA DE USAR O WHERE
+
+SELECT nome from estados where nome LIKE 'A%s';
+SELECT nome from estados where nome LIKE 'rio%';
+SELECT nome from estados where nome = 'Acre';
+SELECT nome from produtos where id_produto > 1; # maior
+SELECT nome from produtos where id_produto < 2; # menor
+SELECT nome from produtos where id_produto = 2; # igual
+SELECT nome from produtos where id_produto >= 1; #maior igual
+SELECT nome from produtos where id_produto <= 2; #menor igual
+SELECT nome from produtos where id_produto != 2; # diferente
+
+# estados que tem 'a' no nome, mas não tem 'a' na sigla
+SELECT sigla, nome from estados where sigla not like '%a%' and nome like '%A%';
+# and serve como e para fazer 2 checagens
+# not serve para negar uma afirmação no where
+# or serve como e para fazer 2 checagens e funciona e qualquer uma das duas estiver correta
+SELECT sigla, nome from estados where sigla like '%a%' or nome like '%A%';
+
+# estados que tem 'c' no nome ou tem 'c' na sigla e 'n' no nome ou na sigla
+SELECT
+	sigla, nome
+from estados 
+where 
+	(sigla like '%c%' or
+    nome like '%c%') and
+    (sigla like '%n%' or
+    nome like '%n%');
+# usar parenteses para agrupar itens com AND e OR
+
+# orde by
+SELECT * FROM estados order by nome;
+
+# order by coluna DESC => ordena descendente
+# order by coluna ASC => ordena ascendente
+
+# ordena primeiro por nome, se nome for igual usa a sigla
+SELECT * FROM estados order by nome DESC, sigla ASC;
+
+# paginação
+# pra retornar uma parte dos registros LIMIT, OFFSET
+SELECT * FROM estados order by nome desc LIMIT 3 OFFSET 9;
+# LIMIT limita a quantidade de retornos
+# OFFSET faz começar a contar a partir do item x
+SELECT * FROM categorias_produto ORDER BY id_categoria_produto LIMIT 1 OFFSET 0;
+
+# Quando uma coluna do banco de dados que é usada no where não tem indice
+# o banco passa por todos os registros ta tabela pra fazer um where
+# Quando uma coluna do banco de dados que é usada no where tem indice
+# o banco só passa pelos indices
+EXPLAIN SELECT nome from estados where nome LIKE 'rio%';
+SELECT nome from estados where nome LIKE 'rio%';
+
+#select -> simples
+#where -> filtrar coisas
+#order by -> ordenação
+#---------
+#join -> juntar 2 tabelas em 1 => trabalha com as chaves extrangeiras
+#subselects -> select dentro de outro select (ou dentro de um insert)
+#agrupamentos -> soma dos valores das vendas do mês de maio, a soma dos valores agrupados por produto, % de lucro dos itens que vendemos
+#group by, sum
+
+
+
+
+
+
+
+#IMPORTAR CEPS

@@ -4,3 +4,5 @@ nâo está conectado em uma base de dados resolve utilizando
 
 use nome_do_schema;
 
+Error Code: 1062. Duplicate entry 'AC' for key 'estados.PRIMARY'	0.000 sec
+Acontece quando você já tem o item salvo no banco de dados
